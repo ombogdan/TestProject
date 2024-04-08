@@ -37,6 +37,7 @@ target 'TestProject' do
     pod 'nanopb', :modular_headers => true
     pod 'FirebaseCoreInternal', :modular_headers => true
     pod 'GoogleUtilities', :modular_headers => true
+    pod 'FirebaseABTesting', :modular_headers => true
 
   use_react_native!(
     :path => config[:reactNativePath],

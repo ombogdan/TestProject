@@ -1,23 +1,11 @@
 import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
+import {NavigationContainer} from "@react-navigation/native";
 
-import { useTypedSelector } from "shared/store";
+import {navigationRef} from "./root-navigator.config";
+import {AppUserNavigator} from "./app-user/app-user.navigator";
 
-import { selectIsUserAuthedStatus } from "store/selectors/user";
-import { navigationRef } from "./root-navigator.config";
-import { AuthNavigator } from "./auth/auth.navigator";
-import { AppUserNavigator } from "./app-user/app-user.navigator";
-
-export const RootNavigator = () => {
-  const isUserAuthed = useTypedSelector(selectIsUserAuthedStatus);
-
-  return (
+export const RootNavigator = () => (
     <NavigationContainer ref={navigationRef}>
-      {!isUserAuthed ? (
-        <AuthNavigator />
-      ) : (
-        <AppUserNavigator />
-      )}
+      <AppUserNavigator/>
     </NavigationContainer>
   );
-};

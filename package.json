@@ -1,5 +1,5 @@
 {
-  "name": "Test",
+  "name": "TestProject",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -13,6 +13,7 @@
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.23.1",
     "@react-native-firebase/app": "^19.1.2",
+    "@react-native-firebase/remote-config": "^19.1.2",
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/stack": "^6.3.29",
     "@reduxjs/toolkit": "^1.9.5",
