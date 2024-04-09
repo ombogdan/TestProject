@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 
-import {FlatList, Image, SafeAreaView, Text, View} from "react-native";
+import {FlatList, Image, SafeAreaView, ScrollView, Text, View} from "react-native";
 import {firebase} from '@react-native-firebase/remote-config';
 import {useTypedDispatch, useTypedSelector} from "store/index";
 import {appActions} from "store/slices/app";
@@ -9,6 +9,7 @@ import {GIFT_IMAGE} from "constants/index";
 import {AppIcon} from "assets/index";
 import {Box} from "ui-kit/box";
 import {BannerItem} from "screens/app-user/main/components/banner";
+import {SerialItem} from "screens/app-user/main/components/serial-item";
 import {useStyles} from "./main.styles";
 
 const Main = () => {
@@ -39,16 +40,41 @@ const Main = () => {
           <AppIcon name="search" size={30} style={styles.searchImg}/>
         </Box>
       </View>
-      <View style={styles.renderContainer}>
+      <ScrollView style={styles.renderContainer} showsVerticalScrollIndicator={false}>
         <FlatList
           data={serialsData?.banersList ?? []}
           horizontal
+          showsHorizontalScrollIndicator={false}
           renderItem={({item}) => (
             <BannerItem bannerItem={item}/>
           )}
           keyExtractor={item => item.id}
         />
-      </View>
+        <Box pt={28} pb={12}>
+          <Text style={styles.trendingNowHeader}>Trending Now</Text>
+        </Box>
+        <FlatList
+          data={serialsData?.trendingNowList ?? []}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          renderItem={({item}) => (
+            <SerialItem bannerItem={item}/>
+          )}
+          keyExtractor={item => item.id}
+        />
+        <Box pt={28} pb={12}>
+          <Text style={styles.trendingNowHeader}>Top Romance</Text>
+        </Box>
+        <FlatList
+          data={serialsData?.topRomanceList ?? []}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          renderItem={({item}) => (
+            <SerialItem bannerItem={item}/>
+          )}
+          keyExtractor={item => item.id}
+        />
+      </ScrollView>
     </SafeAreaView>
   );
 };

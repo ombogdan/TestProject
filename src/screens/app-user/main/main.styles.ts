@@ -50,5 +50,10 @@ export const useStyles = createStyles(({theme, scale}: any) =>
     renderContainer: {
       paddingLeft: scale(16),
     },
+    trendingNowHeader: {
+      fontSize: scale(18),
+      fontWeight: '700',
+      color: theme.palette.textDefault,
+    }
   }),
 );
