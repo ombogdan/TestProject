@@ -17,9 +17,9 @@ export interface IAppTheme {
 
 export const defaultTheme: IAppTheme = {
   palette: {
-    black: '#000000',
+    black: '#0F0F0F',
     blackText: '#1F1D2B',
-    textDefault: '#292941',
+    textDefault: '#F5F5F5',
     textDefaultTransparent: 'rgba(41, 41, 65, 0.63)',
     blueIris: '#372FB6',
     suggestionButton: '#454AB1',

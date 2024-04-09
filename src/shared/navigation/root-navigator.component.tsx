@@ -8,4 +8,4 @@ export const RootNavigator = () => (
     <NavigationContainer ref={navigationRef}>
       <AppUserNavigator/>
     </NavigationContainer>
-  );
+);
