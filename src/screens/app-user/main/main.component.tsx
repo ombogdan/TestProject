@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 
-import {Image, SafeAreaView, Text, View} from "react-native";
+import {FlatList, Image, SafeAreaView, Text, View} from "react-native";
 import {firebase} from '@react-native-firebase/remote-config';
 import {useTypedDispatch, useTypedSelector} from "store/index";
 import {appActions} from "store/slices/app";
@@ -8,6 +8,7 @@ import {selectAllSerials} from "store/selectors/user";
 import {GIFT_IMAGE} from "constants/index";
 import {AppIcon} from "assets/index";
 import {Box} from "ui-kit/box";
+import {BannerItem} from "screens/app-user/main/components/banner";
 import {useStyles} from "./main.styles";
 
 const Main = () => {
@@ -17,6 +18,9 @@ const Main = () => {
 
   const fetchRemoteConfig = async () => {
     const defaultAppRemoteConfig = firebase.remoteConfig();
+    defaultAppRemoteConfig.settings.minimumFetchIntervalMillis = 0;
+    firebase.remoteConfig().settings.minimumFetchIntervalMillis = 0;
+
     await defaultAppRemoteConfig.fetchAndActivate();
     const serials = defaultAppRemoteConfig.getValue('serials').asString();
     dispatch(appActions.saveSerials(JSON.parse(serials)));
@@ -35,11 +39,16 @@ const Main = () => {
           <AppIcon name="search" size={30} style={styles.searchImg}/>
         </Box>
       </View>
-      {(serialsData?.banersList ?? []).map((serial) => (
-        <View>
-          <Text>{serial.name}</Text>
-        </View>
-      ))}
+      <View style={styles.renderContainer}>
+        <FlatList
+          data={serialsData?.banersList ?? []}
+          horizontal
+          renderItem={({item}) => (
+            <BannerItem bannerItem={item}/>
+          )}
+          keyExtractor={item => item.id}
+        />
+      </View>
     </SafeAreaView>
   );
 };
