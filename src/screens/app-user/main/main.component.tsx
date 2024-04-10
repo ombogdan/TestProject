@@ -50,9 +50,11 @@ const Main = () => {
           )}
           keyExtractor={item => item.id}
         />
-        <Box pt={28} pb={12}>
-          <Text style={styles.trendingNowHeader}>Trending Now</Text>
-        </Box>
+        {(serialsData?.trendingNowList ?? []).length > 0 &&
+          <Box pt={28} pb={12}>
+            <Text style={styles.trendingNowHeader}>Trending Now</Text>
+          </Box>
+        }
         <FlatList
           data={serialsData?.trendingNowList ?? []}
           horizontal
@@ -62,9 +64,11 @@ const Main = () => {
           )}
           keyExtractor={item => item.id}
         />
-        <Box pt={28} pb={12}>
-          <Text style={styles.trendingNowHeader}>Top Romance</Text>
-        </Box>
+        {(serialsData?.topRomanceList ?? []).length > 0 &&
+          <Box pt={28} pb={12}>
+            <Text style={styles.trendingNowHeader}>Top Romance</Text>
+          </Box>
+        }
         <FlatList
           data={serialsData?.topRomanceList ?? []}
           horizontal

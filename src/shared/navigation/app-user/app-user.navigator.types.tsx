@@ -1,10 +1,12 @@
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RouteProp } from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RouteProp} from '@react-navigation/native';
 
-import { AppUserRoutes } from './app-user.navigator.enums';
+import {Banner} from "shared/types";
+import {AppUserRoutes} from './app-user.navigator.enums';
 
 export type AppUserRoutesParamList = {
   [AppUserRoutes.Home]: {} | undefined;
+  [AppUserRoutes.VideoPlayer]: { serial: Banner };
 };
 
 export type AppUserRoutesNavigationProps =

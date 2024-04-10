@@ -1,7 +1,9 @@
-import {Image, Text, View} from "react-native";
+import {Image, Pressable, Text, View} from "react-native";
 import React from "react";
 import {BlurView} from "@react-native-community/blur";
 import {AppIcon} from "assets/index";
+import {navigate} from "shared/navigation/root-navigator.config";
+import {AppUserRoutes} from "shared/navigation/app-user";
 import {BannerItemProps} from "./serial-item.types";
 import {useStyles} from "./serial-item.styles";
 
@@ -10,7 +12,11 @@ const SerialItem = ({bannerItem}: BannerItemProps) => {
   const styles = useStyles();
 
   return (
-    <View style={styles.bannerImageContainer}>
+    <Pressable
+      style={styles.bannerImageContainer}
+      onPress={() => {
+        navigate(AppUserRoutes.VideoPlayer, {serial: bannerItem});
+      }}>
       <Image
         source={{uri: photo_url}}
         style={styles.bannerImage}
@@ -37,7 +43,7 @@ const SerialItem = ({bannerItem}: BannerItemProps) => {
         }
         <Text style={styles.nameText}>{name}</Text>
       </View>
-    </View>
+    </Pressable>
   )
 }
 

@@ -1,5 +1,7 @@
-import {Image, Text, View} from "react-native";
+import {Image, Pressable, Text, View} from "react-native";
 import React from "react";
+import {navigate} from "shared/navigation/root-navigator.config";
+import {AppUserRoutes} from "shared/navigation/app-user";
 import {BannerItemProps} from "./banner.types";
 import {useStyles} from "./banner.styles";
 
@@ -8,7 +10,11 @@ const BannerItem = ({bannerItem}: BannerItemProps) => {
   const styles = useStyles();
 
   return (
-    <View style={styles.bannerImageContainer}>
+    <Pressable
+      onPress={() => {
+        navigate(AppUserRoutes.VideoPlayer, {serial: bannerItem})
+      }}
+      style={styles.bannerImageContainer}>
       <Image
         source={{uri: photo_url}}
         style={styles.bannerImage}
@@ -20,7 +26,7 @@ const BannerItem = ({bannerItem}: BannerItemProps) => {
         <Text style={styles.nameText}>{name}</Text>
         <Text style={styles.authorText}>{author}</Text>
       </View>
-    </View>
+    </Pressable>
   )
 }
 
