@@ -42,6 +42,7 @@ const VideoPlayer = ({route}: VideoPlayerProps) => {
   const [currentVideoTime, setCurrentVideoTime] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isVideoLoading, setIsVideoLoading] = useState(false);
+  const [pageInitialized, setPageInitialized] = useState(false);
 
   const handlePressPause = () => {
     setIsPlaying(!isPlaying);
@@ -61,11 +62,11 @@ const VideoPlayer = ({route}: VideoPlayerProps) => {
   useEffect(() => {
     if (episodeIndex !== undefined) {
       setPage(episodeIndex);
-      setCurrentVideoTime(0);
+      setCurrentVideoTime(episodeTime);
     }
   }, [episodeIndex]);
 
-  const handleChangeSlider = (sliderValue: number[]) =>{
+  const handleChangeSlider = (sliderValue: number[]) => {
     videoRefs[episodeIndex]?.seek(sliderValue[0]);
   }
 
@@ -86,20 +87,24 @@ const VideoPlayer = ({route}: VideoPlayerProps) => {
         </View>
       }
       <PagerView
-        style={{ flex: 1 }}
+        style={{flex: 1}}
         ref={pagerViewRef}
         orientation="vertical"
         initialPage={episodeIndex}
         onPageSelected={(e) => {
           const newIndex = e.nativeEvent.position;
           setViewableItemIndex(newIndex);
-          if(episodeTime) {
-            videoRefs[newIndex]?.seek(episodeTime);
-          }
           setCurrentVideoTime(0);
+          if (!pageInitialized) {
+            if (episodeTime) {
+              videoRefs[episodeIndex]?.seek(episodeTime);
+            }
+          } else {
+            videoRefs[newIndex]?.seek(0);
+          }
         }}>
         {episodesList.map((episode, index) => (
-          <View key={episode.id} style={{ height: windowHeight - insets.bottom - insets.top }}>
+          <View key={episode.id} style={{height: windowHeight - insets.bottom - insets.top}}>
             <Video
               ref={(ref) => {
                 videoRefs[index] = ref;
@@ -112,10 +117,17 @@ const VideoPlayer = ({route}: VideoPlayerProps) => {
               onLoad={(meta) => {
                 setIsVideoLoading(true);
                 setVideoDuration(meta.duration);
+                // if (!pageInitialized) {
+                //   if (episodeTime) {
+                //     videoRefs[episodeIndex]?.seek(episodeTime);
+                //     setCurrentVideoTime(episodeTime);
+                //   }
+                // }
               }}
               onProgress={({currentTime}) => {
                 if (currentTime !== 0) {
-                  setCurrentVideoTime(currentTime)
+                  setCurrentVideoTime(currentTime);
+                  setPageInitialized(true);
                 }
               }}
               bufferConfig={{
@@ -126,8 +138,8 @@ const VideoPlayer = ({route}: VideoPlayerProps) => {
               }}
             />
             {!isVideoLoading && (
-              <View style={{ /* Стилі для вашого індикатора завантаження */ }}>
-                <ActivityIndicator size="large" />
+              <View style={{ /* Стилі для вашого індикатора завантаження */}}>
+                <ActivityIndicator size="large"/>
               </View>
             )}
           </View>
