@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 
-import {ActivityIndicator, Dimensions, Platform, SafeAreaView, Text, TouchableOpacity, View} from "react-native";
+import {ActivityIndicator, Dimensions, SafeAreaView, Text, TouchableOpacity, View} from "react-native";
 import {useTypedDispatch} from "store/index";
 import Video from "react-native-video";
 import {AppIcon} from "assets/index";
@@ -8,7 +8,7 @@ import {useSafeAreaInsets} from "react-native-safe-area-context";
 import LinearGradient from 'react-native-linear-gradient';
 import {HEADER_GRADIENT, HEADER_GRADIENT_REVERSED} from "constants/index";
 import {goBack} from "shared/navigation/root-navigator.config";
-import {SwiperFlatList} from 'react-native-swiper-flatlist';
+import PagerView from 'react-native-pager-view';
 import {Slider} from '@miblanchard/react-native-slider';
 import {Banner} from "shared/types";
 import {appActions} from "store/slices/app";
@@ -31,7 +31,7 @@ type VideoRefs = Record<number, Video | null>;
 const VideoPlayer = ({route}: VideoPlayerProps) => {
   const {serial, episodeIndex, episodeTime} = route?.params ?? {};
   const {episodesList} = serial || {};
-  const swiperRef = useRef(null);
+  const pagerViewRef = useRef<PagerView>(null);
   const videoRefs = useRef<VideoRefs>({}).current;
   const insets = useSafeAreaInsets();
   const styles = useStyles({insets});
@@ -42,8 +42,6 @@ const VideoPlayer = ({route}: VideoPlayerProps) => {
   const [currentVideoTime, setCurrentVideoTime] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isVideoLoading, setIsVideoLoading] = useState(false);
-  const [isVideoScrolling, setIsVideoScrolling] = useState(false);
-  const [userInitiatedScroll, setUserInitiatedScroll] = useState(false);
 
   const handlePressPause = () => {
     setIsPlaying(!isPlaying);
@@ -54,19 +52,18 @@ const VideoPlayer = ({route}: VideoPlayerProps) => {
     goBack();
   }
 
-  useEffect(() => {
-    if (episodeIndex && !isVideoLoading && !userInitiatedScroll) {
-      swiperRef.current?.scrollToIndex({
-        index: episodeIndex,
-        animated: true,
-      });
-      if (userInitiatedScroll) {
-        setUserInitiatedScroll(false);
-      }
+  const setPage = (page: number) => {
+    if (pagerViewRef.current) {
+      pagerViewRef.current?.setPage(page);
     }
+  };
 
-  }, [episodeTime, episodeIndex, isVideoLoading, isVideoScrolling, userInitiatedScroll]);
-
+  useEffect(() => {
+    if (episodeIndex !== undefined) {
+      setPage(episodeIndex);
+      setCurrentVideoTime(0);
+    }
+  }, [episodeIndex]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -84,33 +81,26 @@ const VideoPlayer = ({route}: VideoPlayerProps) => {
           <ActivityIndicator size="large"/>
         </View>
       }
-      <SwiperFlatList
-        ref={swiperRef}
-        vertical
-        keyExtractor={(item, index) => index.toString()}
-        showPagination={false}
-        data={episodesList}
-        style={{height: windowHeight - insets.bottom - insets.top}}
-        viewabilityConfig={{itemVisiblePercentThreshold: 60}}
-        onViewableItemsChanged={({viewableItems, changed}) => {
-          if (viewableItems.length > 0) {
-            const firstVisibleIndex = viewableItems[0]?.index ?? 0;
-            setViewableItemIndex(firstVisibleIndex);
-            videoRefs[firstVisibleIndex]?.seek(0);
-            setIsVideoLoading(false);
-            setCurrentVideoTime(0);
-            if (changed.length > 0 && isVideoScrolling && episodeIndex === changed[0].index) {
-              setUserInitiatedScroll(true);
-            }
+      <PagerView
+        style={{ flex: 1 }}
+        ref={pagerViewRef}
+        initialPage={episodeIndex}
+        orientation="vertical"
+        onPageSelected={(e) => {
+          const newIndex = e.nativeEvent.position;
+          setViewableItemIndex(newIndex);
+          if(episodeTime) {
+            videoRefs[newIndex]?.seek(episodeTime);
           }
-        }}
-        renderItem={({item, index}) => (
-          <View style={{height: windowHeight - insets.bottom - insets.top}} key={item}>
+          setCurrentVideoTime(0);
+        }}>
+        {episodesList.map((episode, index) => (
+          <View key={episode.id} style={{ height: windowHeight - insets.bottom - insets.top }}>
             <Video
               ref={(ref) => {
                 videoRefs[index] = ref;
               }}
-              source={{uri: item.video_url}}
+              source={{uri: episode.video_url}}
               style={{width: '100%', height: windowHeight - insets.bottom - insets.top}}
               resizeMode="cover"
               repeat
@@ -118,14 +108,6 @@ const VideoPlayer = ({route}: VideoPlayerProps) => {
               onLoad={(meta) => {
                 setIsVideoLoading(true);
                 setVideoDuration(meta.duration);
-                if ((episodeIndex && !userInitiatedScroll) || index === episodeIndex) {
-                  swiperRef.current?.scrollToIndex({
-                    index: episodeIndex,
-                    animated: true,
-                    viewOffset: Platform.OS === 'ios' ? episodeIndex * (insets.bottom + insets.top) : 0
-                  });
-                  setIsVideoScrolling(true);
-                }
               }}
               onProgress={({currentTime}) => {
                 if (currentTime !== 0) {
@@ -139,9 +121,14 @@ const VideoPlayer = ({route}: VideoPlayerProps) => {
                 bufferForPlaybackAfterRebufferMs: 2000,
               }}
             />
+            {!isVideoLoading && (
+              <View style={{ /* Стилі для вашого індикатора завантаження */ }}>
+                <ActivityIndicator size="large" />
+              </View>
+            )}
           </View>
-        )}
-      />
+        ))}
+      </PagerView>
 
       <LinearGradient colors={HEADER_GRADIENT_REVERSED} style={styles.bottomContainer}>
         <TouchableOpacity onPress={handlePressPause} style={styles.closeButton}>
