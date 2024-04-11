@@ -91,10 +91,20 @@ export const useStyles = createStyles(({theme, scale, insets}: any) =>
       width: '100%',
       height: '100%',
     },
-    slider:{
-      flex: 1,
-      marginLeft: scale(22),
-      marginRight: scale(21),
-    }
+    thumbStyle: {
+      backgroundColor: theme.palette.textDefault,
+      height: scale(9),
+      width: scale(9),
+    },
+    trackStyle: {
+      width: scale(292),
+    },
+    loaderContainer: {
+      position: 'absolute',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: '100%',
+      height: '100%',
+    },
   }),
 );

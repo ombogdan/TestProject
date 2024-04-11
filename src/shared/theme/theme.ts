@@ -5,6 +5,7 @@ export interface IAppTheme {
     blueIris: `#${string}`;
     textDefault: `#${string}`;
     grayLight: `#${string}`;
+    blue: `#${string}`;
   };
 }
 
@@ -15,5 +16,6 @@ export const defaultTheme: IAppTheme = {
     textDefault: '#F5F5F5',
     grayLight: '#EBEDF0',
     blueIris: '#00BFE5',
+    blue: '#3598D0',
   }
 };

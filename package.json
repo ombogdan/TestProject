@@ -8,18 +8,19 @@
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
-    "postinstall": "cd ios && pod install && cd .."
+    "postinstall": "patch-package && cd ios && pod install && cd .."
   },
   "dependencies": {
+    "@miblanchard/react-native-slider": "^2.6.0",
     "@react-native-async-storage/async-storage": "^1.23.1",
     "@react-native-community/blur": "^4.4.0",
-    "@react-native-community/slider": "^4.5.1",
     "@react-native-firebase/app": "^16.6.0",
     "@react-native-firebase/remote-config": "^16.6.0",
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/stack": "^6.3.29",
     "@reduxjs/toolkit": "^1.9.5",
     "date-fns": "^3.6.0",
+    "patch-package": "^8.0.0",
     "react": "18.2.0",
     "react-native": "0.73.6",
     "react-native-device-info": "^10.13.1",

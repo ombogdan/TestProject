@@ -4,5 +4,6 @@ export const APP_ICONS = Object.freeze({
   'close': require('shared/assets/icons/close.png'),
   'pause': require('shared/assets/icons/pause.png'),
   'play': require('shared/assets/icons/play.png'),
+  'rightArrow': require('shared/assets/icons/rightArrow.png'),
 
 });

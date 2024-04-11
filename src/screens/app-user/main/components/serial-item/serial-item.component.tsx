@@ -1,4 +1,4 @@
-import {Image, Pressable, Text, View} from "react-native";
+import {Image, Platform, Pressable, Text, View} from "react-native";
 import React from "react";
 import {BlurView} from "@react-native-community/blur";
 import {AppIcon} from "assets/index";
@@ -15,7 +15,9 @@ const SerialItem = ({bannerItem}: BannerItemProps) => {
     <Pressable
       style={styles.bannerImageContainer}
       onPress={() => {
-        navigate(AppUserRoutes.VideoPlayer, {serial: bannerItem});
+        if (!close) {
+          navigate(AppUserRoutes.VideoPlayer, {serial: bannerItem});
+        }
       }}>
       <Image
         source={{uri: photo_url}}
@@ -25,16 +27,29 @@ const SerialItem = ({bannerItem}: BannerItemProps) => {
         <BlurView
           style={styles.absolute}
           blurType="light"
-          blurAmount={13}
+          blurAmount={8}
           reducedTransparencyFallbackColor="white">
-          <View style={styles.closedContainer}>
-            <BlurView
-              style={styles.absoluteWhite}
-              blurType="light"
-              blurAmount={5}
-              reducedTransparencyFallbackColor="white"/>
-            <AppIcon name="lock"/>
-          </View>
+          {Platform.OS === 'android' ?
+            <View style={styles.closedContainer}>
+              <View style={styles.overwlow}>
+                <BlurView
+                  style={styles.absoluteWhite}
+                  blurType="light"
+                  blurAmount={15}
+                  reducedTransparencyFallbackColor="white"/>
+                <AppIcon name="lock" size={24}/>
+              </View>
+            </View>
+            :
+            <View style={styles.closedContainer}>
+              <BlurView
+                style={styles.absoluteWhite}
+                blurType="light"
+                blurAmount={5}
+                reducedTransparencyFallbackColor="white"/>
+              <AppIcon name="lock"/>
+            </View>
+          }
         </BlurView>
       }
       <View style={styles.nameContainer}>

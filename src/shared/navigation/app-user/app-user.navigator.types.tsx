@@ -6,7 +6,7 @@ import {AppUserRoutes} from './app-user.navigator.enums';
 
 export type AppUserRoutesParamList = {
   [AppUserRoutes.Home]: {} | undefined;
-  [AppUserRoutes.VideoPlayer]: { serial: Banner };
+  [AppUserRoutes.VideoPlayer]: { serial: Banner, episodeIndex: number, episodeTime: number, };
 };
 
 export type AppUserRoutesNavigationProps =

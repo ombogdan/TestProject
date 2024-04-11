@@ -6,3 +6,8 @@ export const selectAllSerials = createSelector(
   [selectAppStore],
   (appStore) => appStore.serialsData,
 );
+
+export const selectLastWatchingData = createSelector(
+  [selectAppStore],
+  (appStore) => appStore.lastWatchingData,
+);
