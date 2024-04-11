@@ -1,6 +1,6 @@
 # Getting Started
 
-## Step 1:Install all dependencies
+## Step 1: Install all dependencies
 ```bash
 yarn install
 ```
@@ -15,7 +15,7 @@ To start Metro, run the following command from the _root_ of your React Native p
 npx react-native start --reset-cache
 ```
 
-## Step 2: Start your Application
+## Step 3: Start your Application
 
 Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
 
