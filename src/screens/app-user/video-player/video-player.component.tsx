@@ -1,8 +1,16 @@
 import React, {useEffect, useRef, useState} from "react";
 
-import {ActivityIndicator, Dimensions, SafeAreaView, Text, TouchableOpacity, View} from "react-native";
+import {
+  ActivityIndicator,
+  Dimensions,
+  NativeSyntheticEvent,
+  SafeAreaView,
+  Text,
+  TouchableOpacity,
+  View
+} from "react-native";
 import {useTypedDispatch} from "store/index";
-import Video from "react-native-video";
+import Video, {OnLoadData} from "react-native-video";
 import {AppIcon} from "assets/index";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
 import LinearGradient from 'react-native-linear-gradient';
@@ -70,6 +78,31 @@ const VideoPlayer = ({route}: VideoPlayerProps) => {
     videoRefs[episodeIndex]?.seek(sliderValue[0]);
   }
 
+  const handlePageSelected = (e: NativeSyntheticEvent<any>) => {
+    const newIndex = e.nativeEvent.position;
+    setViewableItemIndex(newIndex);
+    setCurrentVideoTime(0);
+    if (!pageInitialized) {
+      if (episodeTime) {
+        videoRefs[episodeIndex]?.seek(episodeTime);
+      }
+    } else {
+      videoRefs[newIndex]?.seek(0);
+    }
+  }
+
+  const handleLoad = (meta: OnLoadData) => {
+    setIsVideoLoading(true);
+    setVideoDuration(meta.duration);
+  }
+
+  const onProgress = (currentTime: number) => {
+    if (currentTime !== 0) {
+      setCurrentVideoTime(currentTime);
+      setPageInitialized(true);
+    }
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <LinearGradient colors={HEADER_GRADIENT} style={styles.headerContainer}>
@@ -92,16 +125,7 @@ const VideoPlayer = ({route}: VideoPlayerProps) => {
         orientation="vertical"
         initialPage={episodeIndex}
         onPageSelected={(e) => {
-          const newIndex = e.nativeEvent.position;
-          setViewableItemIndex(newIndex);
-          setCurrentVideoTime(0);
-          if (!pageInitialized) {
-            if (episodeTime) {
-              videoRefs[episodeIndex]?.seek(episodeTime);
-            }
-          } else {
-            videoRefs[newIndex]?.seek(0);
-          }
+          handlePageSelected(e);
         }}>
         {episodesList.map((episode, index) => (
           <View key={episode.id} style={{height: windowHeight - insets.bottom - insets.top}}>
@@ -115,20 +139,10 @@ const VideoPlayer = ({route}: VideoPlayerProps) => {
               repeat
               paused={(index === viewableItemIndex) ? !isPlaying : true}
               onLoad={(meta) => {
-                setIsVideoLoading(true);
-                setVideoDuration(meta.duration);
-                // if (!pageInitialized) {
-                //   if (episodeTime) {
-                //     videoRefs[episodeIndex]?.seek(episodeTime);
-                //     setCurrentVideoTime(episodeTime);
-                //   }
-                // }
+                handleLoad(meta);
               }}
               onProgress={({currentTime}) => {
-                if (currentTime !== 0) {
-                  setCurrentVideoTime(currentTime);
-                  setPageInitialized(true);
-                }
+                onProgress(currentTime);
               }}
               bufferConfig={{
                 minBufferMs: 10000,
