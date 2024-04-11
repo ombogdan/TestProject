@@ -65,6 +65,10 @@ const VideoPlayer = ({route}: VideoPlayerProps) => {
     }
   }, [episodeIndex]);
 
+  const handleChangeSlider = (sliderValue: number[]) =>{
+    videoRefs[episodeIndex]?.seek(sliderValue[0]);
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <LinearGradient colors={HEADER_GRADIENT} style={styles.headerContainer}>
@@ -84,8 +88,8 @@ const VideoPlayer = ({route}: VideoPlayerProps) => {
       <PagerView
         style={{ flex: 1 }}
         ref={pagerViewRef}
-        initialPage={episodeIndex}
         orientation="vertical"
+        initialPage={episodeIndex}
         onPageSelected={(e) => {
           const newIndex = e.nativeEvent.position;
           setViewableItemIndex(newIndex);
@@ -135,12 +139,13 @@ const VideoPlayer = ({route}: VideoPlayerProps) => {
           <AppIcon name={isPlaying ? "pause" : "play"}/>
         </TouchableOpacity>
         <Slider
+          minimumValue={0}
+          value={currentVideoTime}
+          maximumValue={videoDuration}
           thumbStyle={styles.thumbStyle}
           trackStyle={styles.trackStyle}
-          minimumValue={0}
-          maximumValue={videoDuration}
-          value={currentVideoTime}
           minimumTrackTintColor="#FFFFFF"
+          onValueChange={handleChangeSlider}
           maximumTrackTintColor="rgba(255,255,255,0.32)"
         />
       </LinearGradient>

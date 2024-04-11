@@ -12,53 +12,55 @@ const SerialItem = ({bannerItem}: BannerItemProps) => {
   const styles = useStyles();
 
   return (
-    <Pressable
-      style={styles.bannerImageContainer}
-      onPress={() => {
-        if (!close) {
-          navigate(AppUserRoutes.VideoPlayer, {serial: bannerItem});
-        }
-      }}>
-      <Image
-        source={{uri: photo_url}}
-        style={styles.bannerImage}
-      />
-      {close &&
-        <BlurView
-          style={styles.absolute}
-          blurType="light"
-          blurAmount={8}
-          reducedTransparencyFallbackColor="white">
-          {Platform.OS === 'android' ?
-            <View style={styles.closedContainer}>
-              <View style={styles.overwlow}>
+    <View>
+      <Pressable
+        style={styles.bannerImageContainer}
+        onPress={() => {
+          if (!close) {
+            navigate(AppUserRoutes.VideoPlayer, {serial: bannerItem});
+          }
+        }}>
+        <Image
+          source={{uri: photo_url}}
+          style={styles.bannerImage}
+        />
+        {close &&
+          <BlurView
+            style={styles.absolute}
+            blurType="light"
+            blurAmount={8}
+            reducedTransparencyFallbackColor="white">
+            {Platform.OS === 'android' ?
+              <View style={styles.closedContainer}>
+                <View style={styles.overwlow}>
+                  <BlurView
+                    style={styles.absoluteWhite}
+                    blurType="light"
+                    blurAmount={15}
+                    reducedTransparencyFallbackColor="white"/>
+                  <AppIcon name="lock" size={24}/>
+                </View>
+              </View>
+              :
+              <View style={styles.closedContainer}>
                 <BlurView
                   style={styles.absoluteWhite}
                   blurType="light"
-                  blurAmount={15}
+                  blurAmount={5}
                   reducedTransparencyFallbackColor="white"/>
-                <AppIcon name="lock" size={24}/>
+                <AppIcon name="lock"/>
               </View>
-            </View>
-            :
-            <View style={styles.closedContainer}>
-              <BlurView
-                style={styles.absoluteWhite}
-                blurType="light"
-                blurAmount={5}
-                reducedTransparencyFallbackColor="white"/>
-              <AppIcon name="lock"/>
-            </View>
-          }
-        </BlurView>
-      }
+            }
+          </BlurView>
+        }
+      </Pressable>
       <View style={styles.nameContainer}>
         {release_date &&
           <Text style={styles.releaseText}>Coming {release_date}</Text>
         }
         <Text style={styles.nameText}>{name}</Text>
       </View>
-    </Pressable>
+    </View>
   )
 }
 

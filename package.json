@@ -8,7 +8,7 @@
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
-    "postinstall": "patch-package && cd ios && pod install && cd .."
+    "postinstall": "cd ios && pod install && cd .."
   },
   "dependencies": {
     "@miblanchard/react-native-slider": "^2.6.0",
